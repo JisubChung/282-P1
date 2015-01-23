@@ -89,76 +89,99 @@ class sudoku {
 	 
 	 //PROF: Does the current board satisfy all the sudoku rules?
 	 public boolean isValid() {
+		 boolean valid = true;
 		 //this iterates through the row/col/box
 		 for (int i=0; i < 9; i++) {
 			 //this iterates through numbers 1-9
 			 for (int j=1; j <= 9; j++) {
 				 //a board is complete if...
 				 //1. each row has numbers 1-9
+				 if (valid == false) {
+					 continue;
+				 }
 				 if (this.doesRowContain(i, j) == false) {
-					 return false;
+					 valid =  false;
 				 }
 				 //2. each col has numbers 1-9
 				 if (this.doesColContain(i, j) == false) {
-					 return false;
+					 valid =  false;
 				 } 
 				 //3. each box has numbers 1-9
 				 //notation on the col is used to move to all three boxes in respective row
 				 if (this.doesBoxContain(i/3, (i/3)*3, j) == false) {
-					 return false;
+					 valid = false;
 				 }
 			 }
 		 }
-		 return true;
+		 return valid;
 	 }
 	 
 	 //PROF: Is this a solved sudoku?
 	 public boolean isComplete() {
+		 boolean valid = true;
 		 //a solved sudoku has all spots filled in
 		 for (int i=0; i < board.length; i++) {
+			 if (valid == false) {
+				 continue;
+			 }
 			 //any of the three checks will be sufficient (row, col, box)
 			 if (this.doesRowContain(i, 0)) {
-				 return false;
+				 valid = false;
 			 }
 		 }
-		 return true;
+		 return valid;
 	 }
 	 
 	 //PROF: return true if val appears in the row of the puzzle
 	 private boolean doesRowContain(int row, int val) {
 		 //Note: counting row/col in base 0
+		 boolean valid = false;
 		 for(int i=0; i < 9; i++) {
+			 if (valid == true) {
+				 continue;
+			 }
 			 if(board[row][i] == val) {
-				 return true;
+				 valid = true;
 			 }
 		 }
-		 return false;
+		 return valid;
 	 }
 	 
 	 //PROF: return true if val appears in the col (column) of the puzzle
 	 private boolean doesColContain(int col, int val) {
 		 //Note: counting row/col in base 0
+		 boolean valid = false;
 		 for(int i=0; i < 9; i++) {
+			 if (valid == true) {
+				 continue;
+			 }
 			 if(board[i][col] == val) {
-				 return true;
+				 valid = true;
 			 }
 		 }
-		 return false;
+		 return valid;
 	 }
 	 
 	 //PROF: return true if val appears in the 3 x 3 box
 	 private boolean doesBoxContain(int row, int col, int val) {
+		 boolean valid = false;
 		 //Note: counting row/col in base 0
 		 // because 9 boxes can be targetted by 81 different possibilities,
 		 // thus the 3*(xxx/3) notation is used
 		 for (int i=3*(row/3); i < (3*(row/3))+3; i++) {
+			 if (valid == true) {
+				 continue;
+			 }
 			 for (int j=3*(col/3); j < (3*(col/3))+3; j++) {
+				 if (valid == true) {
+					 continue;
+				 }
 				 if (board[i][j] == val) {
-					 return true;
+					 valid = true;
 				 }
 			 }
 		 }
-		 return false;
+		 return valid;
 	 }
 	 
 	 //PROF: return n if n is the only possible value for this spot
