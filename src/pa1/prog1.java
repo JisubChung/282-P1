@@ -32,6 +32,7 @@ class Spot {
 
 class sudoku {
 	 
+	//board[row][col]
 	 private int board[][];
 	 
 	 //PROF: default constructor -- I never seem to use it....
@@ -41,7 +42,8 @@ class sudoku {
 	 //PROF: Construct a new sudoku puzzle from a string
 	 //PROF: This piece of code might be useful to you:
 	 //PROF: (int) (s[row].charAt(col + col/3)) - 48
-	 public sudoku(String s[]) { //s[] is entered from left to right
+	 public sudoku(String s[]) { 
+		 //s[] is entered from left to right
 		 //iterating through s[]
 		 for (int counter=0; counter < s.length; counter++) {
 			 
@@ -50,6 +52,7 @@ class sudoku {
 	 
 	 //PROF: Copy constructor
 	 public sudoku(sudoku p) {
+		 this.board = p.board; 
 	 }
 	 
 	 //PROF: Hint: use String.valueOf( i ) to convert an int to a String
@@ -159,8 +162,8 @@ class sudoku {
 	 }
 	 
 	 //PROF: return n if n is the only possible value for this spot
-	 //PROF:return 0 otherwise
-	 private int fillSpot(Spot sq) { 
+	 //PROF: return 0 otherwise
+	 private int fillSpot(Spot sq) {
 		 
 		 return 0;
 	 }
@@ -168,8 +171,45 @@ class sudoku {
 	 //PROF: return a valid spot if only one possibility for val in row
 	 //PROF: return null otherwise
 	 private Spot rowFill(int row, int val) {
-		 
-		 return null;
+		 Spot vSpot = null;
+		 boolean case3 = false;
+		 //CASE 1: The row is full
+		 //CASE 2: The row already has the val
+		 //CASE 3: There are more than one possibility for val in the row
+		 //CASE 4: All numbers except val have been filled in the row
+		 if (this.doesRowContain(row,0)) { //Case #1
+			 if (this.doesRowContain(row, val) == false) { //Case #2
+				 for (int col=0; col < 9; col++) {
+					 //if spot is already filled, skip
+					 if (case3 == true) { //Case #3a
+						 continue;
+					 }
+					 if (board[row][col] == 0) {
+						 //Box contains val, so skip to next box
+						 if (this.doesBoxContain(row, col, val)) {
+							 col = 3*(col/3)+2;
+							 continue;
+						 }
+						 if (this.doesColContain(col, val)) {
+							 continue;
+						 }
+						 if (vSpot == null) { //Case #4: if hit only once
+							 vSpot = new Spot(row, col);
+						 }
+						 else { //Case #3b
+							 vSpot = null;
+							 case3 = true;
+						 }
+					 }
+					 else { //if this spot already has a val
+						 continue;
+					 }
+					 
+				 } 
+			 }
+			  
+		 }
+		 return vSpot;
 	 }
 	 
 	 //PROF: return a valid spot if only one possibility for val in col
@@ -192,6 +232,6 @@ class sudoku {
 	 
 	 //PROF: who are you? Put your name here!
 	 public static String myName() {
-		 return "Jisub Chung";
+		 return "Jisub Chung, don't forget to change date turned in";
 	 }
 }
