@@ -34,13 +34,13 @@ class sudoku {
 	 
 	 private int board[][];
 	 
-	 // default constructor -- I never seem to use it....
+	 //PROF: default constructor -- I never seem to use it....
 	 public sudoku() {
 	 }
 	 
-	 // Construct a new sudoku puzzle from a string
-	 // This piece of code might be useful to you:
-	 // (int) (s[row].charAt(col + col/3)) - 48
+	 //PROF: Construct a new sudoku puzzle from a string
+	 //PROF: This piece of code might be useful to you:
+	 //PROF: (int) (s[row].charAt(col + col/3)) - 48
 	 public sudoku(String s[]) { //s[] is entered from left to right
 		 //iterating through s[]
 		 for (int counter=0; counter < s.length; counter++) {
@@ -48,16 +48,16 @@ class sudoku {
 		 }
 	 }
 	 
-	 // Copy constructor
+	 //PROF: Copy constructor
 	 public sudoku(sudoku p) {
 	 }
 	 
-	 // Hint: use String.valueOf( i ) to convert an int to a String
+	 //PROF: Hint: use String.valueOf( i ) to convert an int to a String
 	 public String toString() {
 		 return("I DONT KNOW WHAT THIS IS SUPPOSED TO BE");
 	 }
 	 
-	 // for easy checking of your answers
+	 //PROF: for easy checking of your answers
 	 public String toString2() {
 		 String result = new String();
 	 	for (int row = 0; row < 9; row++) {
@@ -68,7 +68,7 @@ class sudoku {
 	 	return result;
 	 }
 
-	 // create rotated sudoku puzzle – used by my test programs
+	 //PROF: create rotated sudoku puzzle – used by my test programs
 	 public void rotate() {
 		 int[][] temp = new int[9][9];
 	 	int row, col;
@@ -84,7 +84,7 @@ class sudoku {
 	 	}
 	 }
 	 
-	 // Does the current board satisfy all the sudoku rules?
+	 //PROF: Does the current board satisfy all the sudoku rules?
 	 public boolean isValid() {
 		 //this iterates through the row/col/box
 		 for (int i=0; i < 9; i++) {
@@ -109,7 +109,7 @@ class sudoku {
 		 return true;
 	 }
 	 
-	 // Is this a solved sudoku?
+	 //PROF: Is this a solved sudoku?
 	 public boolean isComplete() {
 		 //a solved sudoku has all spots filled in
 		 for (int i=0; i < board.length; i++) {
@@ -121,7 +121,7 @@ class sudoku {
 		 return true;
 	 }
 	 
-	 // return true if val appears in the row of the puzzle
+	 //PROF: return true if val appears in the row of the puzzle
 	 private boolean doesRowContain(int row, int val) {
 		 //Note: counting row/col in base 0
 		 for(int i=0; i < 9; i++) {
@@ -132,7 +132,7 @@ class sudoku {
 		 return false;
 	 }
 	 
-	 // return true if val appears in the col (column) of the puzzle
+	 //PROF: return true if val appears in the col (column) of the puzzle
 	 private boolean doesColContain(int col, int val) {
 		 //Note: counting row/col in base 0
 		 for(int i=0; i < 9; i++) {
@@ -143,7 +143,7 @@ class sudoku {
 		 return false;
 	 }
 	 
-	 // return true if val appears in the 3 x 3 box
+	 //PROF: return true if val appears in the 3 x 3 box
 	 private boolean doesBoxContain(int row, int col, int val) {
 		 //Note: counting row/col in base 0
 		 // because 9 boxes can be targetted by 81 different possibilities,
@@ -158,29 +158,29 @@ class sudoku {
 		 return false;
 	 }
 	 
-	 // return n if n is the only possible value for this spot
-	 // return 0 otherwise
+	 //PROF: return n if n is the only possible value for this spot
+	 //PROF:return 0 otherwise
 	 private int fillSpot(Spot sq) { 
 		 
 		 return 0;
 	 }
 	 
- 	 // return a valid spot if only one possibility for val in row
-	 // return null otherwise
+	 //PROF: return a valid spot if only one possibility for val in row
+	 //PROF: return null otherwise
 	 private Spot rowFill(int row, int val) {
 		 
 		 return null;
 	 }
 	 
-	 // return a valid spot if only one possibility for val in col
-	 // return null otherwise
+	 //PROF: return a valid spot if only one possibility for val in col
+	 //PROF: return null otherwise
 	 private Spot colFill(int col, int val) {
 		 
 		 return null;
 	 }
 	 
-	 // return a valid spot if only one possibility for val in the box
-	 // return null otherwise
+	 //PROF: return a valid spot if only one possibility for val in the box
+	 //PROF: return null otherwise
 	 private Spot boxFill(int rowbox, int colbox, int val) {
 		 
 		 return null;
@@ -190,7 +190,7 @@ class sudoku {
 		 
 	 }
 	 
-	 // who are you? Put your name here!
+	 //PROF: who are you? Put your name here!
 	 public static String myName() {
 		 return "Jisub Chung";
 	 }
