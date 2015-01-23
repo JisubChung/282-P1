@@ -31,8 +31,6 @@ public class Test1{
         System.out.println("Author: " + sudoku.myName());
         for (int i = 0; i < s.length; i++) {
             p = new sudoku(s[i]);
-            //
-            System.out.println("The final board: \n\n" + p);
             System.out.print("#" + i + ": ");
             p.solve();
             if (p.isComplete())
