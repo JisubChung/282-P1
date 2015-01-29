@@ -169,9 +169,26 @@ class sudoku {
 	 
 	 //PROF: return n if n is the only possible value for this spot
 	 //PROF: return 0 otherwise
+	 //The purpose of fillSpot is for the "Naked Single"
 	 private int fillSpot(Spot sq) {
-		 
-		 return 0;
+		 int count = 1, single = 0;
+		 while (count <= 9) {
+			 //check if the row/col/box has a value
+			 if (doesRowContain(sq.getRow(),count) || doesColContain(sq.getCol(),count) || doesBoxContain(sq.getRow(),sq.getCol(),count)) {
+				count++; 
+			 }
+			 //check if the spot has multiple possible values
+			 else if (single != 0) {
+				 single = 0;
+				 count = 9;
+			 }
+			 else {
+				single = count;
+				count++;
+			 }
+			 
+		 }
+		 return single;
 	 }
 	 
 	 //PROF: return a valid spot if only one possibility for val in row
@@ -182,13 +199,13 @@ class sudoku {
 		 if (doesRowContain(row,0) == true && doesRowContain(row,val) == false) {
 			int col = 0;
 			while (col < 9) {
-				//if spot is filled, then move over to next col
-				if(board[row][col] != 0) {
-					col++;
-				}
 				//if box contains val, then move over to the next box
-				else if(doesBoxContain(row,col,val)) {
+				if(doesBoxContain(row,col,val)) {
 					col+=3; 
+				}
+				//if spot is filled, then move over to next col
+				else if(board[row][col] != 0) {
+					col++;
 				}
 				//if col contains val, then move to next col
 				else if (doesColContain(col,val)) {
@@ -216,13 +233,13 @@ class sudoku {
 		 if (doesColContain(col,0) == true && doesColContain(col,val) == false) {
 			int row = 0;
 			while (row < 9) {
-				//if spot is filled, then move over to next col
-				if(board[row][col] != 0) {
-					row++;
-				}
 				//if box contains val, then move over to the next box
-				else if(doesBoxContain(row,col,val)) {
+				if(doesBoxContain(row,col,val)) {
 					row+=3; 
+				}
+				//if spot is filled, then move over to next col
+				else if(board[row][col] != 0) {
+					row++;
 				}
 				//if row contains val, then move to next col
 				else if (doesRowContain(row,val)) {
