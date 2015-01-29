@@ -177,14 +177,9 @@ class sudoku {
 	 //PROF: return a valid spot if only one possibility for val in row
 	 //PROF: return null otherwise
 	 private Spot rowFill(int row, int val) {
-		 Spot fillThis = null;
-		 //Trivial Case, the row is full
-		 if (doesRowContain(row,0) == false) {
-		 }
-		 //Trivial Case, the row already has val
-		 else if (doesRowContain(row,val) == true) {
-		 }
-		 else {
+		 Spot fillThis = null; 
+		 //Trivial Case: the row is full & the row already has val
+		 if (doesRowContain(row,0) == true && doesRowContain(row,val) == false) {
 			int col = 0;
 			while (col < 9) {
 				//if spot is filled, then move over to next col
@@ -216,15 +211,72 @@ class sudoku {
 	 //PROF: return a valid spot if only one possibility for val in col
 	 //PROF: return null otherwise
 	 private Spot colFill(int col, int val) {
-		 
-		 return null;
+		 Spot fillThis = null;
+		 //Trivial Case, the col is full & the col already has val
+		 if (doesColContain(col,0) == true && doesColContain(col,val) == false) {
+			int row = 0;
+			while (row < 9) {
+				//if spot is filled, then move over to next col
+				if(board[row][col] != 0) {
+					row++;
+				}
+				//if box contains val, then move over to the next box
+				else if(doesBoxContain(row,col,val)) {
+					row+=3; 
+				}
+				//if row contains val, then move to next col
+				else if (doesRowContain(row,val)) {
+					row++;
+				}
+				//if there are 2 >= spots for val to go
+				else if (fillThis != null) {
+					fillThis = null;
+					row = 9;
+				}
+				else {
+					fillThis = new Spot(row, col);
+					row++;
+				}
+			}
+		 }
+		 return fillThis;
 	 }
 	 
 	 //PROF: return a valid spot if only one possibility for val in the box
 	 //PROF: return null otherwise
 	 private Spot boxFill(int rowbox, int colbox, int val) {
-		 
-		 return null;
+		 Spot fillThis = null;
+		 //Trivial Case, the box is full & the box already has val
+		 if (doesBoxContain(rowbox,colbox,0) && doesBoxContain(rowbox,colbox,val) == false) {
+			 //these are created to point exclusively at the top left corner in the box
+			 rowbox=3*(rowbox/3);
+			 colbox=3*(colbox/3);
+			 int counter = 0;
+			 while (counter < 9) {
+				//if spot contains val, then move over to the next box
+				if(doesRowContain(rowbox+(counter/3),val)) {
+					counter+=3;
+				}
+				//if spot is filled, then move over to next spot
+				else if(board[rowbox+(counter/3)][colbox+((counter)%3)] != 0) {
+					counter++;
+				}
+				//if col contains val, then move to next spot
+				else if (doesColContain(colbox+((counter)%3),val)) {
+					counter++;
+				}
+				//if there are 2 >= spots for val to go
+				else if (fillThis != null) {
+					fillThis = null;
+					counter = 9;
+				}
+				else {
+					fillThis = new Spot(rowbox, colbox);
+					counter++;
+				}
+			 }
+		 }
+		 return fillThis;
 	 }
 	 
 	 public void solve() {
