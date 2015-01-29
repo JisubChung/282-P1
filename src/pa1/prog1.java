@@ -32,7 +32,7 @@ class Spot {
 
 class sudoku {
 	 
-	//board[row][col]
+	 //board[row][col]
 	 private int board[][];
 	 
 	 //PROF: default constructor -- I never seem to use it....
@@ -89,60 +89,49 @@ class sudoku {
 	 
 	 //PROF: Does the current board satisfy all the sudoku rules?
 	 public boolean isValid() {
-		 boolean valid = true;
-		 //this iterates through the row/col/box
-		 for (int i=0; i < 9; i++) {
-			 //this iterates through numbers 1-9
-			 for (int j=1; j <= 9; j++) {
-				 //a board is complete if...
-				 //1. each row has numbers 1-9
-				 if (valid == false) {
-					 continue;
-				 }
-				 if (this.doesRowContain(i, j) == false) {
-					 valid =  false;
-				 }
-				 //2. each col has numbers 1-9
-				 if (this.doesColContain(i, j) == false) {
-					 valid =  false;
-				 } 
-				 //3. each box has numbers 1-9
-				 //notation on the col is used to move to all three boxes in respective row
-				 if (this.doesBoxContain(i/3, (i/3)*3, j) == false) {
-					 valid = false;
-				 }
+		 boolean isValid = true;
+		 int row,col,val;
+		 row=col=val=0;
+		 //val < 9, because there are only 9 values, and val is incremented at the beginning
+		 while (isValid && val < 9) {
+			 val++;
+			 if(doesRowContain(row,val) == false) {
+				 isValid = false;
 			 }
+			 if(doesColContain(col, val) == false) {
+				 isValid = false;
+			 }
+			 if(doesBoxContain(row, col, val) == false) {
+				 isValid = false;
+			 }
+			 row++;
+			 col++;
 		 }
-		 return valid;
+		 return isValid;
 	 }
 	 
 	 //PROF: Is this a solved sudoku?
 	 public boolean isComplete() {
-		 boolean valid = true;
-		 //a solved sudoku has all spots filled in
-		 for (int i=0; i < board.length; i++) {
-			 if (valid == false) {
-				 continue;
-			 }
-			 //any of the three checks will be sufficient (row, col, box)
-			 if (this.doesRowContain(i, 0)) {
-				 valid = false;
-			 }
+		 boolean completed = true;
+		 int row = 0;
+		 //a solved sudoku has all spots filled in. In other words: no 0's in any spot
+		 while (completed && row < 9) {
+			 completed = doesRowContain(row,0);
+			 row++;
 		 }
-		 return valid;
+		 return completed;
 	 }
 	 
 	 //PROF: return true if val appears in the row of the puzzle
 	 private boolean doesRowContain(int row, int val) {
 		 //Note: counting row/col in base 0
 		 boolean valid = false;
-		 for(int i=0; i < 9; i++) {
-			 if (valid == true) {
-				 continue;
-			 }
-			 if(board[row][i] == val) {
+		 int spot = 0;
+		 while(valid == false && spot < 9) {
+			 if (board[row][spot] == val) {
 				 valid = true;
 			 }
+			 spot++;
 		 }
 		 return valid;
 	 }
@@ -151,13 +140,12 @@ class sudoku {
 	 private boolean doesColContain(int col, int val) {
 		 //Note: counting row/col in base 0
 		 boolean valid = false;
-		 for(int i=0; i < 9; i++) {
-			 if (valid == true) {
-				 continue;
-			 }
-			 if(board[i][col] == val) {
+		 int spot = 0;
+		 while(valid == false && spot < 9) {
+			 if (board[spot][col] == val) {
 				 valid = true;
 			 }
+			 spot++;
 		 }
 		 return valid;
 	 }
@@ -168,18 +156,13 @@ class sudoku {
 		 //Note: counting row/col in base 0
 		 // because 9 boxes can be targetted by 81 different possibilities,
 		 // thus the 3*(xxx/3) notation is used
-		 for (int i=3*(row/3); i < (3*(row/3))+3; i++) {
-			 if (valid == true) {
-				 continue;
+		 //All nine spots are accessed by the permutations of 9%3 and 9/3
+		 int spot = 0;
+		 while (valid == false && spot < 9) {
+			 if (board[3*(row/3)+(spot%3)][3*(row/3)+(spot/3)] == val) {
+				 valid = true;
 			 }
-			 for (int j=3*(col/3); j < (3*(col/3))+3; j++) {
-				 if (valid == true) {
-					 continue;
-				 }
-				 if (board[i][j] == val) {
-					 valid = true;
-				 }
-			 }
+			 spot++;
 		 }
 		 return valid;
 	 }
@@ -194,45 +177,40 @@ class sudoku {
 	 //PROF: return a valid spot if only one possibility for val in row
 	 //PROF: return null otherwise
 	 private Spot rowFill(int row, int val) {
-		 Spot vSpot = null;
-		 boolean case3 = false;
-		 //CASE 1: The row is full
-		 //CASE 2: The row already has the val
-		 //CASE 3: There are more than one possibility for val in the row
-		 //CASE 4: All numbers except val have been filled in the row
-		 if (this.doesRowContain(row,0)) { //Case #1
-			 if (this.doesRowContain(row, val) == false) { //Case #2
-				 for (int col=0; col < 9; col++) {
-					 //if spot is already filled, skip
-					 if (case3 == true) { //Case #3a
-						 continue;
-					 }
-					 if (board[row][col] == 0) {
-						 //Box contains val, so skip to next box
-						 if (this.doesBoxContain(row, col, val)) {
-							 col = 3*(col/3)+2;
-							 continue;
-						 }
-						 if (this.doesColContain(col, val)) {
-							 continue;
-						 }
-						 if (vSpot == null) { //Case #4: if hit only once
-							 vSpot = new Spot(row, col);
-						 }
-						 else { //Case #3b
-							 vSpot = null;
-							 case3 = true;
-						 }
-					 }
-					 else { //if this spot already has a val
-						 continue;
-					 }
-					 
-				 } 
-			 }
-			  
+		 Spot fillThis = null;
+		 //Trivial Case, the row is full
+		 if (doesRowContain(row,0) == false) {
 		 }
-		 return vSpot;
+		 //Trivial Case, the row already has val
+		 else if (doesRowContain(row,val) == true) {
+		 }
+		 else {
+			int col = 0;
+			while (col < 9) {
+				//if spot is filled, then move over to next col
+				if(board[row][col] != 0) {
+					col++;
+				}
+				//if box contains val, then move over to the next box
+				else if(doesBoxContain(row,col,val)) {
+					col+=3; 
+				}
+				//if col contains val, then move to next col
+				else if (doesColContain(col,val)) {
+					col++;
+				}
+				//if there are 2 >= spots for val to go
+				else if (fillThis != null) {
+					fillThis = null;
+					col = 99;
+				}
+				else {
+					fillThis = new Spot(row, col);
+					col++;
+				}
+			}
+		 }
+		 return fillThis;
 	 }
 	 
 	 //PROF: return a valid spot if only one possibility for val in col
