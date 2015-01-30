@@ -37,16 +37,31 @@ class sudoku {
 	
 	//PROF: default constructor -- I never seem to use it....
 	public sudoku() {
+		board = new int[9][9];
 	}
 	
 	//PROF: Construct a new sudoku puzzle from a string
 	//PROF: This piece of code might be useful to you:
 	//PROF: (int) (s[row].charAt(col + col/3)) - 48
 	public sudoku(String s[]) { 
+		board = new int[9][9];
 		//s[] is entered from left to right
 		//iterating through s[]
-		for (int counter=0; counter < s.length; counter++) {
-		 
+		String carriage;
+		//spot goes up to 80, correlating to each spot on the board
+		int spot = 0;
+		for (int index = 0; index < s.length; index++) {
+			//this carriage carries each line of the sudoku board
+			carriage = s[index];
+			for (int counter=0; counter < carriage.length(); counter++) {
+				//this condition exists because there are spaces in carriage
+				if (counter == 3 || counter == 7) {
+				}
+				else {
+					board[spot/9][spot%9] = Integer.parseInt(carriage.substring(counter, counter+1));
+					spot++;
+				}
+			}
 		}
 	}
 	
