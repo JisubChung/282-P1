@@ -10,7 +10,8 @@ class Spot {
 	 private int row, col;
 	 
 	 public Spot(int row, int col) {
-		 
+		 setRow(row);
+		 setCol(col);
 	 }
 	 
 	 public void setRow(int row) {
@@ -29,7 +30,6 @@ class Spot {
 		 return col;
 	 }
 }
-
 class sudoku {
 	
 	//board[row][col]
@@ -72,7 +72,15 @@ class sudoku {
 	
 	//PROF: Hint: use String.valueOf( i ) to convert an int to a String
 	public String toString() {
-		return("I DONT KNOW WHAT THIS IS SUPPOSED TO BE");
+		String printedBoard = "";
+		System.out.println("\n");
+		for (int i = 0; i <= 8; i++) {
+			printedBoard+=(""+board[i][0]+board[i][1]+board[i][2]+" | "+board[i][3]+board[i][4]+board[i][5]+" | "+board[i][6]+board[i][7]+board[i][8] + "\n");
+			if (i == 2 || i == 5) {
+				printedBoard+="---------------\n";
+			}
+		}
+		return(printedBoard);
 	}
 	
 	//PROF: for easy checking of your answers
@@ -104,22 +112,63 @@ class sudoku {
 	//PROF: Does the current board satisfy all the sudoku rules?
 	public boolean isValid() {
 		 boolean isValid = true;
-		 int row,col,val;
-		 row=col=val=0;
+		 int spot = 0, val = 1;
 		 //val < 9, because there are only 9 values, and val is incremented at the beginning
-		 while (isValid && val < 9) {
+		 while (isValid && val <= 9) {
+			 //For reference: row = spot/9, col = spot%9, box = 3*(spot/3) & 3*(spot%3)
+			 //first we check to see if the row/col/box has val
+			 if (doesRowContain(spot/9, val)) {
+				 //count will keep track of the count of val there are for the row/col/box
+				 int count = 0;
+				 int col = 0;
+				 //if val is a unique entry in the row of the board, then count will = 1
+				 //the above "if" statement will ensure that count will be at least 1
+				 while (count <= 1 && col < 9) {
+					 if (board[spot/9][col] == val) {
+						 count++;
+					 }
+					 col++;
+				 }
+				 if (count >= 2) {
+					 isValid = false;
+				 }
+			 }
+			 if (doesColContain(spot%9, val)) {
+				 //count will keep track of the count of val there are for the row/col/box
+				 int count = 0;
+				 int row = 0;
+				 //if val is a unique entry in the row of the board, then count will = 1
+				 //the above "if" statement will ensure that count will be at least 1
+				 while (count <= 1 && row <= 8) {
+					 if (board[row][spot%9] == val) {
+						 count++;
+					 }
+					 row++;
+				 }
+				 if (count >= 2) {
+					 isValid = false;
+				 }
+			 }
+			 if (doesBoxContain(3*(spot/3), 3*(spot%3), val)) {
+				 //count will keep track of the count of val there are for the row/col/box
+				 int count = 0;
+				 //there is actually no reason other than readability for row and col to be two different variables
+				 int row = 0, col = 0;
+				 //if val is a unique entry in the row of the board, then count will = 1
+				 //the above "if" statement will ensure that count will be at least 1
+				 while (count <= 1 && row <= 8) {
+					 if (board[(3*(spot/3))+(row/3)][(3*(spot%3))+(col%3)] == val) {
+						 count++;
+					 }
+					 row++;
+					 col++;
+				 }
+				 if (count >= 2) {
+					 isValid = false;
+				 }
+			 }
+			 spot++;
 			 val++;
-			 if(doesRowContain(row,val) == false) {
-				 isValid = false;
-			 }
-			 if(doesColContain(col, val) == false) {
-				 isValid = false;
-			 }
-			 if(doesBoxContain(row, col, val) == false) {
-				 isValid = false;
-			 }
-			 row++;
-			 col++;
 		 }
 		 return isValid;
 	 }
@@ -130,7 +179,9 @@ class sudoku {
 		 int row = 0;
 		 //a solved sudoku has all spots filled in. In other words: no 0's in any spot
 		 while (completed && row < 9) {
-			 completed = doesRowContain(row,0);
+			 if (doesRowContain(row,0)) {
+				 completed = false;
+			 }
 			 row++;
 		 }
 		 return completed;
@@ -141,7 +192,7 @@ class sudoku {
 		 //Note: counting row/col in base 0
 		 boolean valid = false;
 		 int spot = 0;
-		 while(valid == false && spot < 9) {
+		 while(valid == false && spot < 9 && row < 9) {
 			 if (board[row][spot] == val) {
 				 valid = true;
 			 }
@@ -154,12 +205,12 @@ class sudoku {
 	private boolean doesColContain(int col, int val) {
 		 //Note: counting row/col in base 0
 		 boolean valid = false;
-		 int spot = 0;
-		 while(valid == false && spot < 9) {
-			 if (board[spot][col] == val) {
+		 int row = 0;
+		 while(valid == false && row < 9) {
+			 if (board[row][col] == val) {
 				 valid = true;
 			 }
-			 spot++;
+			 row++;
 		 }
 		 return valid;
 	 }
@@ -172,8 +223,8 @@ class sudoku {
 		 // thus the 3*(xxx/3) notation is used
 		 //All nine spots are accessed by the permutations of 9%3 and 9/3
 		 int spot = 0;
-		 while (valid == false && spot < 9) {
-			 if (board[3*(row/3)+(spot%3)][3*(row/3)+(spot/3)] == val) {
+		 while (valid == false && spot < 9 && row < 9) {
+			 if (board[3*(row/3)+spot/3][3*(col/3)+spot%3] == val) {
 				 valid = true;
 			 }
 			 spot++;
@@ -194,7 +245,7 @@ class sudoku {
 			 //check if the spot has multiple possible values
 			 else if (single != 0) {
 				 single = 0;
-				 count = 9;
+				 count = 10;
 			 }
 			 else {
 				single = count;
@@ -276,6 +327,8 @@ class sudoku {
 	//PROF: return a valid spot if only one possibility for val in the box
 	//PROF: return null otherwise
 	private Spot boxFill(int rowbox, int colbox, int val) {
+		if (rowbox ==3 && colbox == 3 && val == 6)
+			System.out.print("");
 		 Spot fillThis = null;
 		 //Trivial Case, the box is full & the box already has val
 		 if (doesBoxContain(rowbox,colbox,0) && doesBoxContain(rowbox,colbox,val) == false) {
@@ -302,7 +355,7 @@ class sudoku {
 					counter = 9;
 				}
 				else {
-					fillThis = new Spot(rowbox, colbox);
+					fillThis = new Spot(rowbox+(counter/3), colbox+((counter)%3));
 					counter++;
 				}
 			 }
@@ -311,32 +364,60 @@ class sudoku {
 	 }
 	
 	public void solve() {
-		boolean notFinished = true;
-		Spot rowSpot, colSpot, boxSpot;
-		int singleFill = 0;
-		while(notFinished) {
-			for(int index = 1; index <= 9; index++) {
-				for(int val = 1; val <= 9; val++) {
-					rowSpot=rowFill(index,val);
-					colSpot=colFill(index,val);
-					boxSpot=boxFill(index/3,index%3,val);
-					//I'm kind of cheating with the variable names for this one
-					singleFill=fillSpot(new Spot(index,val));
-					if (rowSpot != null) {
-						board[rowSpot.getRow()][rowSpot.getCol()] = val;
-						rowSpot = null;
-					}
-					if (colSpot != null) {
-						board[colSpot.getRow()][colSpot.getCol()] = val;
-						colSpot = null;
-					}
-					if (boxSpot != null) {
-						board[boxSpot.getRow()][boxSpot.getCol()] = val;
-						boxSpot = null;
-					}
-					if (singleFill != 0) {
-						board[index][val] = singleFill;
-						singleFill = 0;
+		boolean trySolve = true;
+		boolean boardChanged = true;
+		Spot fillThis;
+		while (trySolve) {
+			//the board is not solvable if there is a mistake
+			if (isValid() == false) {
+				trySolve = false;
+			}
+			//In the case of a valid board that hasn't had any changes made it is unsolvable
+			else if (boardChanged == false) {
+				trySolve = false;
+			}
+			//finally if the board is both valid and complete then we're done
+			else if (isComplete()) {
+				trySolve = false;
+			}
+			else {
+				boardChanged = false;
+				//iterating through each value
+				int row, col;
+				for (int val = 1; val <= 9; val++) {
+					row = 0; 
+					for (;row < 9; row++) {
+						if (row == 0 && val == 0) {
+							System.out.print("");
+						}
+						fillThis = rowFill(row, val);
+						if (fillThis != null) {
+							board[row][fillThis.getCol()] = val;
+							boardChanged = true;
+						}
+						col = 0;
+						for (; col < 9; col++) {
+							if (col == 0 && val == 9) {
+								System.out.print("");
+							}
+							fillThis = colFill(col, val);
+							if (fillThis != null) {
+								board[fillThis.getRow()][col] = val;
+								boardChanged = true;
+							}
+							fillThis = boxFill(row, col, val);
+							if (fillThis != null) {
+								board[fillThis.getRow()][fillThis.getCol()] = val;
+								boardChanged = true;
+							}
+							if (board[row][col] == 0) {
+								if (val == fillSpot(new Spot(row,col))) {
+									board[row][col] = val;
+									boardChanged = true;
+								}
+							}
+							System.out.print("");
+						}	
 					}
 				}
 			}
